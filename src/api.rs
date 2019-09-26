@@ -60,6 +60,7 @@ macro_rules! impl_i {
         impl_ops_vector_int_min_max!(
             [$elem_ty; $elem_n]: $tuple_id | $test_tt
         );
+        impl_ops_vector_saturating_arithmetic!([$elem_ty; $elem_n]: $tuple_id | $test_tt);
         impl_reduction_integer_arithmetic!(
             [$elem_ty; $elem_n]: $tuple_id | $ielem_ty | $test_tt
         );
@@ -123,6 +124,7 @@ macro_rules! impl_u {
         impl_ops_vector_int_min_max!(
             [$elem_ty; $elem_n]: $tuple_id | $test_tt
         );
+        impl_ops_vector_saturating_arithmetic!([$elem_ty; $elem_n]: $tuple_id | $test_tt);
         impl_reduction_integer_arithmetic!(
             [$elem_ty; $elem_n]: $tuple_id | $ielem_ty | $test_tt
         );

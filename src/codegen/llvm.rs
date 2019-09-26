@@ -72,6 +72,9 @@ extern "platform-intrinsic" {
     crate fn simd_or<T>(x: T, y: T) -> T;
     crate fn simd_xor<T>(x: T, y: T) -> T;
 
+    crate fn simd_saturating_add<T>(x: T, y: T) -> T;
+    crate fn simd_saturating_sub<T>(x: T, y: T) -> T;
+
     crate fn simd_reduce_add_unordered<T, U>(x: T) -> U;
     crate fn simd_reduce_mul_unordered<T, U>(x: T) -> U;
     crate fn simd_reduce_add_ordered<T, U>(x: T, acc: U) -> U;

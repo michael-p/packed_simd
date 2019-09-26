@@ -209,7 +209,6 @@
     link_llvm_intrinsics,
     core_intrinsics,
     stmt_expr_attributes,
-    align_offset,
     mmx_target_feature,
     crate_visibility_modifier,
     custom_inner_attributes
@@ -226,6 +225,7 @@
 #![cfg_attr(test, feature(hashmap_internals))]
 #![deny(warnings, rust_2018_idioms, clippy::missing_inline_in_public_items)]
 #![no_std]
+#![allow(clippy::all)]
 
 use cfg_if::cfg_if;
 

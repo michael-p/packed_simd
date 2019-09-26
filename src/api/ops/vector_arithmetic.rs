@@ -1,5 +1,58 @@
 //! Vertical (lane-wise) vector-vector arithmetic operations.
 
+macro_rules! impl_ops_vector_saturating_arithmetic {
+    ([$elem_ty:ident; $elem_count:expr]: $id:ident | $test_tt:tt) => {
+        impl $id {
+            #[inline]
+            pub fn saturating_add(self, other: Self) -> Self {
+                use crate::llvm::simd_saturating_add;
+                unsafe { Simd(simd_saturating_add(self.0, other.0)) }
+            }
+
+            #[inline]
+            pub fn saturating_sub(self, other: Self) -> Self {
+                use crate::llvm::simd_saturating_sub;
+                unsafe { Simd(simd_saturating_sub(self.0, other.0)) }
+            }
+        }
+
+        test_if!{
+            $test_tt:
+            paste::item! {
+                pub mod [<$id _ops_vector_sat_arith>] {
+                    use super::*;
+                    #[cfg_attr(not(target_arch = "wasm32"), test)] #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
+                    fn ops_vector_saturating_arithmetic() {
+                        let z = $id::splat(0 as $elem_ty);
+                        let o = $id::splat(1 as $elem_ty);
+                        let t = $id::splat(2 as $elem_ty);
+                        let f = $id::splat(4 as $elem_ty);
+
+                        // add
+                        assert_eq!(z.saturating_add(z), z);
+                        assert_eq!(o.saturating_add(z), o);
+                        assert_eq!(t.saturating_add(z), t);
+                        assert_eq!(t.saturating_add(t), f);
+                        let max_val = $id::splat($elem_ty::max_value());
+                        assert_eq!(max_val.saturating_add(z), max_val);
+                        assert_eq!(max_val.saturating_add(o), max_val);
+
+                        // sub
+                        assert_eq!(z.saturating_sub(z), z);
+                        assert_eq!(o.saturating_sub(z), o);
+                        assert_eq!(t.saturating_sub(z), t);
+                        assert_eq!(f.saturating_sub(t), t);
+                        assert_eq!(f.saturating_sub(o).saturating_sub(o), t);
+                        let min_value = $id::splat($elem_ty::min_value());
+                        assert_eq!(min_value.saturating_sub(z), min_value);
+                        assert_eq!(min_value.saturating_sub(o), min_value);
+                    }
+                }
+            }
+        }
+    };
+}
+
 macro_rules! impl_ops_vector_arithmetic {
     ([$elem_ty:ident; $elem_count:expr]: $id:ident | $test_tt:tt) => {
         impl crate::ops::Add for $id {
